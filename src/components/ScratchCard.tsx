@@ -179,10 +179,12 @@ export function ScratchCard({ label, value, onReveal }: Props) {
           }`}
         >
           <span
-            className="text-gold-gradient font-serif"
+            className="font-serif"
             style={{
               fontSize: "2.25rem",
               letterSpacing: "0.05em",
+              color: "#7a4a3b",
+              textShadow: "0 1px 0 rgba(255,255,255,0.8), 0 0 18px rgba(220,170,120,0.35)",
               filter: revealed
                 ? "drop-shadow(0 2px 12px rgba(200,140,90,0.45))"
                 : "none",
@@ -191,6 +193,7 @@ export function ScratchCard({ label, value, onReveal }: Props) {
             {value}
           </span>
         </div>
+
 
         {/* Scratch canvas */}
         <canvas
