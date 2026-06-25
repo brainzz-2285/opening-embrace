@@ -23,6 +23,8 @@ function OpeningScreen() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const introRef = useRef<HTMLVideoElement>(null);
   const introBgRef = useRef<HTMLVideoElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const saveDateRef = useRef<HTMLDivElement>(null);
   const [stage, setStage] = useState<Stage>("poster");
 
   const handleOpen = async () => {
@@ -43,12 +45,20 @@ function OpeningScreen() {
     introBgRef.current?.play().catch(() => {});
   }, [stage]);
 
+  const handleIntroEnded = () => {
+    setStage("savedate");
+    // Smooth scroll down to Save the Date
+    requestAnimationFrame(() => {
+      saveDateRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
   return (
     <main className="relative h-[100svh] w-full overflow-hidden bg-ivory">
-      {/* Video layer */}
+      {/* Envelope video — fixed overlay, fades out after opening */}
       <div
         onClick={handleOpen}
-        className={`absolute inset-0 cursor-pointer transition-opacity duration-1000 ${
+        className={`fixed inset-0 z-40 cursor-pointer transition-opacity duration-1000 ${
           stage === "revealed" || stage === "savedate" ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
       >
@@ -63,7 +73,6 @@ function OpeningScreen() {
           className="absolute inset-0 h-full w-full object-cover"
         />
 
-        {/* Soft vignette + tint */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -79,7 +88,6 @@ function OpeningScreen() {
           }}
         />
 
-        {/* Overlay text — only on poster */}
         {stage === "poster" && (
           <div className="absolute inset-0 flex flex-col items-center justify-end pb-20 px-6 text-center sm:pb-28">
             <p
@@ -121,54 +129,53 @@ function OpeningScreen() {
         )}
       </div>
 
-      {/* Intro video section */}
-      <section
-        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-[1400ms] ease-out ${
-          stage === "revealed" ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-        style={{ backgroundColor: "oklch(0.16 0.015 30)" }}
-      >
-        {/* Blurred backdrop layer */}
-        <video
-          ref={introBgRef}
-          src={introAsset.url}
-          playsInline
-          muted
-          loop
-          preload="auto"
-          aria-hidden
-          className="absolute inset-0 h-full w-full object-cover scale-125 blur-2xl opacity-40"
-        />
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, transparent 30%, oklch(0.12 0.015 30 / 0.85) 100%)",
-          }}
-        />
-
-        {/* Foreground intro video */}
-        <video
-          ref={introRef}
-          src={introAsset.url}
-          playsInline
-          muted
-          preload="auto"
-          onEnded={() => setStage("savedate")}
-          className="relative z-10 max-h-full max-w-full h-full w-full object-contain"
-        />
-      </section>
-
-      {/* Save the Date + Countdown */}
+      {/* Scrollable invitation flow */}
       <div
-        className={`absolute inset-0 transition-opacity duration-[1400ms] ease-out overflow-y-auto ${
-          stage === "savedate" ? "opacity-100" : "opacity-0 pointer-events-none"
+        ref={scrollerRef}
+        className={`absolute inset-0 overflow-y-auto transition-opacity duration-[1400ms] ease-out ${
+          stage === "revealed" || stage === "savedate" ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
+        style={{ scrollBehavior: "smooth" }}
       >
-        <SaveTheDate />
+        {/* Intro video section */}
+        <section
+          className="relative h-[100svh] w-full flex items-center justify-center"
+          style={{ backgroundColor: "oklch(0.16 0.015 30)" }}
+        >
+          <video
+            ref={introBgRef}
+            src={introAsset.url}
+            playsInline
+            muted
+            loop
+            preload="auto"
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover scale-125 blur-2xl opacity-40"
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, transparent 30%, oklch(0.12 0.015 30 / 0.85) 100%)",
+            }}
+          />
+
+          <video
+            ref={introRef}
+            src={introAsset.url}
+            playsInline
+            muted
+            preload="auto"
+            onEnded={handleIntroEnded}
+            className="relative z-10 max-h-full max-w-full h-full w-full object-contain"
+          />
+        </section>
+
+        <div ref={saveDateRef}>
+          <SaveTheDate />
+        </div>
         <WeddingCountdown />
       </div>
-
     </main>
   );
 }
