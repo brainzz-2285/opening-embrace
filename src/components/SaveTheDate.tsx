@@ -12,7 +12,7 @@ export function SaveTheDate() {
     if (!allRevealed) return;
     setShowSparkles(true);
     const t1 = setTimeout(() => setShowMessage(true), 600);
-    const t2 = setTimeout(() => setShowSparkles(false), 2200);
+    const t2 = setTimeout(() => setShowSparkles(false), 3000);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -28,6 +28,27 @@ export function SaveTheDate() {
         delay: Math.random() * 1.4,
         size: 4 + Math.random() * 8,
       })),
+    [showSparkles],
+  );
+
+  const confettiColors = ["#d9a45a", "#e8c07a", "#f5d8b8", "#c98a72", "#b07a65", "#fff4d6"];
+  const confetti = useMemo(
+    () =>
+      Array.from({ length: 80 }).map((_, i) => {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 180 + Math.random() * 320;
+        return {
+          id: i,
+          dx: Math.cos(angle) * distance,
+          dy: Math.sin(angle) * distance - 60,
+          rotate: Math.random() * 720 - 360,
+          delay: Math.random() * 0.25,
+          duration: 1.6 + Math.random() * 1.2,
+          color: confettiColors[i % confettiColors.length],
+          w: 6 + Math.random() * 6,
+          h: 10 + Math.random() * 8,
+        };
+      }),
     [showSparkles],
   );
 
@@ -119,6 +140,26 @@ export function SaveTheDate() {
               </svg>
             </span>
           ))}
+
+          {/* Confetti burst from center */}
+          <div className="absolute left-1/2 top-1/2 w-0 h-0">
+            {confetti.map((c) => (
+              <span
+                key={c.id}
+                className="absolute block rounded-[1px]"
+                style={{
+                  width: c.w,
+                  height: c.h,
+                  backgroundColor: c.color,
+                  boxShadow: `0 0 6px ${c.color}66`,
+                  ["--dx" as any]: `${c.dx}px`,
+                  ["--dy" as any]: `${c.dy}px`,
+                  ["--rot" as any]: `${c.rotate}deg`,
+                  animation: `confetti-burst ${c.duration}s cubic-bezier(0.2,0.7,0.3,1) ${c.delay}s both`,
+                }}
+              />
+            ))}
+          </div>
         </div>
       )}
     </section>
