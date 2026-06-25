@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import videoAsset from "@/assets/opening-envelope.mp4.asset.json";
 import posterAsset from "@/assets/opening-envelope-poster.jpg.asset.json";
 import introAsset from "@/assets/intro-page.mp4.asset.json";
+import { SaveTheDate } from "@/components/SaveTheDate";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/")({
   component: OpeningScreen,
 });
 
-type Stage = "poster" | "playing" | "revealed";
+type Stage = "poster" | "playing" | "revealed" | "savedate";
 
 function OpeningScreen() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -46,7 +47,7 @@ function OpeningScreen() {
       <div
         onClick={handleOpen}
         className={`absolute inset-0 cursor-pointer transition-opacity duration-1000 ${
-          stage === "revealed" ? "opacity-0 pointer-events-none" : "opacity-100"
+          stage === "revealed" || stage === "savedate" ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
       >
         <video
@@ -151,9 +152,19 @@ function OpeningScreen() {
           playsInline
           muted
           preload="auto"
+          onEnded={() => setStage("savedate")}
           className="relative z-10 max-h-full max-w-full h-full w-full object-contain"
         />
       </section>
+
+      {/* Save the Date section */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-[1400ms] ease-out overflow-y-auto ${
+          stage === "savedate" ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <SaveTheDate />
+      </div>
     </main>
   );
 }
