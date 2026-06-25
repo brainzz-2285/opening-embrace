@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FloatingPetals } from "@/components/FloatingPetals";
-import invitationAsset from "@/assets/invitation.png.asset.json";
+import invitationAsset from "@/assets/invitation-intro.mp4.asset.json";
 import carnivalAsset from "@/assets/carnival.mp4.asset.json";
 import sangeetAsset from "@/assets/sangeet.mp4.asset.json";
 import weddingAsset from "@/assets/wedding.mp4.asset.json";
@@ -129,10 +129,14 @@ export function Festivities() {
             boxShadow: "0 30px 80px -20px rgba(176,137,104,0.35), 0 0 0 1px rgba(201,168,76,0.18)",
           }}
         >
-          <img
+          <video
             src={invitationAsset.url}
-            alt="Formal wedding invitation"
-            className="block w-full h-auto"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="block w-full h-auto object-cover"
           />
         </div>
       </FadeUp>
