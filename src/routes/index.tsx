@@ -167,7 +167,7 @@ function OpeningScreen() {
             muted
             preload="auto"
             onEnded={handleIntroEnded}
-            className="relative z-10 max-h-full max-w-full h-full w-full object-contain"
+            className="relative z-10 h-full w-full object-cover"
           />
         </section>
 
