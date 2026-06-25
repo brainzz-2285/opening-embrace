@@ -178,6 +178,7 @@ function OpeningScreen() {
         </div>
         <WeddingCountdown />
         <OurStory />
+        <Festivities />
       </div>
     </main>
   );
