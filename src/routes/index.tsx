@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import videoAsset from "@/assets/opening-envelope.mp4.asset.json";
 import posterAsset from "@/assets/opening-envelope-poster.jpg.asset.json";
+import introAsset from "@/assets/intro-page.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,6 +18,8 @@ type Stage = "poster" | "playing" | "revealed";
 
 function OpeningScreen() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const introRef = useRef<HTMLVideoElement>(null);
+  const introBgRef = useRef<HTMLVideoElement>(null);
   const [stage, setStage] = useState<Stage>("poster");
 
   const handleOpen = async () => {
@@ -30,6 +33,12 @@ function OpeningScreen() {
       setStage("revealed");
     }
   };
+
+  useEffect(() => {
+    if (stage !== "revealed") return;
+    introRef.current?.play().catch(() => {});
+    introBgRef.current?.play().catch(() => {});
+  }, [stage]);
 
   return (
     <main className="relative h-[100svh] w-full overflow-hidden bg-ivory">
@@ -109,35 +118,41 @@ function OpeningScreen() {
         )}
       </div>
 
-      {/* Invitation placeholder */}
+      {/* Intro video section */}
       <section
-        className={`absolute inset-0 flex items-center justify-center px-6 transition-opacity duration-[1400ms] ease-out ${
+        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-[1400ms] ease-out ${
           stage === "revealed" ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
-        style={{
-          background:
-            "radial-gradient(ellipse at top, oklch(0.95 0.04 80) 0%, var(--ivory) 60%, oklch(0.92 0.035 25 / 0.6) 100%)",
-        }}
+        style={{ backgroundColor: "oklch(0.16 0.015 30)" }}
       >
-        <div className="text-center max-w-md animate-fade-up">
-          <p className="text-[0.7rem] uppercase tracking-[0.5em] text-gold-deep/80">
-            Together with their families
-          </p>
-          <h2
-            className="mt-8 text-6xl sm:text-7xl text-gold-gradient"
-            style={{ fontFamily: "var(--font-script)" }}
-          >
-            Our Story Begins
-          </h2>
-          <div className="mx-auto mt-8 flex items-center justify-center gap-3">
-            <span className="h-px w-16 bg-gradient-to-r from-transparent to-gold" />
-            <span className="text-gold-deep">✦</span>
-            <span className="h-px w-16 bg-gradient-to-l from-transparent to-gold" />
-          </div>
-          <p className="mt-8 font-serif text-lg italic text-muted-foreground">
-            Invitation details coming soon
-          </p>
-        </div>
+        {/* Blurred backdrop layer */}
+        <video
+          ref={introBgRef}
+          src={introAsset.url}
+          playsInline
+          muted
+          loop
+          preload="auto"
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover scale-125 blur-2xl opacity-40"
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, transparent 30%, oklch(0.12 0.015 30 / 0.85) 100%)",
+          }}
+        />
+
+        {/* Foreground intro video */}
+        <video
+          ref={introRef}
+          src={introAsset.url}
+          playsInline
+          muted
+          preload="auto"
+          className="relative z-10 max-h-full max-w-full h-full w-full object-contain"
+        />
       </section>
     </main>
   );
