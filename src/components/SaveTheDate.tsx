@@ -140,6 +140,26 @@ export function SaveTheDate() {
               </svg>
             </span>
           ))}
+
+          {/* Confetti burst from center */}
+          <div className="absolute left-1/2 top-1/2 w-0 h-0">
+            {confetti.map((c) => (
+              <span
+                key={c.id}
+                className="absolute block rounded-[1px]"
+                style={{
+                  width: c.w,
+                  height: c.h,
+                  backgroundColor: c.color,
+                  boxShadow: `0 0 6px ${c.color}66`,
+                  ["--dx" as any]: `${c.dx}px`,
+                  ["--dy" as any]: `${c.dy}px`,
+                  ["--rot" as any]: `${c.rotate}deg`,
+                  animation: `confetti-burst ${c.duration}s cubic-bezier(0.2,0.7,0.3,1) ${c.delay}s both`,
+                }}
+              />
+            ))}
+          </div>
         </div>
       )}
     </section>
