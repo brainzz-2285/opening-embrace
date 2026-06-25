@@ -5,6 +5,7 @@ import posterAsset from "@/assets/opening-envelope-poster.jpg.asset.json";
 import introAsset from "@/assets/intro-page.mp4.asset.json";
 import { SaveTheDate } from "@/components/SaveTheDate";
 import { WeddingCountdown } from "@/components/WeddingCountdown";
+import { OurStory } from "@/components/OurStory";
 
 
 export const Route = createFileRoute("/")({
@@ -175,6 +176,7 @@ function OpeningScreen() {
           <SaveTheDate />
         </div>
         <WeddingCountdown />
+        <OurStory />
       </div>
     </main>
   );
