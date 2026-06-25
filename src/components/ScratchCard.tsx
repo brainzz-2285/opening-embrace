@@ -45,21 +45,33 @@ export function ScratchCard({ label, value, onReveal }: Props) {
       ctx.fillRect(0, 0, w, h);
 
       // Subtle shimmer streaks
-      ctx.globalAlpha = 0.18;
-      for (let i = 0; i < 6; i++) {
-        const x = (i / 6) * w + Math.random() * 20;
+      ctx.globalAlpha = 0.14;
+      for (let i = 0; i < 5; i++) {
+        const x = (i / 5) * w + Math.random() * 20;
         ctx.fillStyle = i % 2 === 0 ? "#fff" : "#7a4a3b";
         ctx.fillRect(x, 0, 2 * dpr, h);
       }
       ctx.globalAlpha = 1;
 
-      // SCRATCH text
-      ctx.fillStyle = "rgba(90, 50, 40, 0.7)";
-      ctx.font = `${14 * dpr}px "Inter", sans-serif`;
+      // SCRATCH text — readable, centered
+      const scratchText = "SCRATCH";
+      const fontSize = Math.min(18 * dpr, w * 0.18);
+      ctx.font = `${fontSize}px "Cormorant Garamond", "Georgia", serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.letterSpacing = `${6 * dpr}px` as unknown as string;
-      ctx.fillText("S C R A T C H", w / 2, h / 2);
+      ctx.fillStyle = "rgba(110, 60, 45, 0.82)";
+
+      const totalWidth = ctx.measureText(scratchText).width;
+      const spacing = fontSize * 0.55;
+      const drawnWidth = totalWidth + spacing * (scratchText.length - 1);
+      const startX = (w - drawnWidth) / 2;
+      for (let i = 0; i < scratchText.length; i++) {
+        const char = scratchText[i];
+        const charWidth = ctx.measureText(char).width;
+        const x = startX + i * (totalWidth / scratchText.length + spacing) + charWidth / 2;
+        ctx.fillText(char, x, h / 2);
+      }
+
     };
 
     resize();
