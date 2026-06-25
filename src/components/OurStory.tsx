@@ -4,57 +4,77 @@ import photo1 from "@/assets/story-1.jpg.asset.json";
 import photo2 from "@/assets/story-2.jpg.asset.json";
 import photo3 from "@/assets/story-3.jpg.asset.json";
 
-// Each card's resting position offset (so prior cards peek out underneath)
+// Small resting offsets so previous photos peek out behind the top card.
 const PHOTOS = [
-  { src: photo1.url, restX: -8, restY: -6, rotate: -7 },
-  { src: photo2.url, restX: 6, restY: 0, rotate: 5 },
-  { src: photo3.url, restX: -2, restY: 6, rotate: -3 },
+  { src: photo1.url, restX: -3, restY: -2, rotate: -6 },
+  { src: photo2.url, restX: 3, restY: 1, rotate: 4 },
+  { src: photo3.url, restX: -1, restY: 3, rotate: -3 },
 ];
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+function getScrollParent(node: HTMLElement | null): HTMLElement | Window {
+  let el: HTMLElement | null = node?.parentElement ?? null;
+  while (el) {
+    const style = getComputedStyle(el);
+    const oy = style.overflowY;
+    if ((oy === "auto" || oy === "scroll") && el.scrollHeight > el.clientHeight) {
+      return el;
+    }
+    el = el.parentElement;
+  }
+  return window;
+}
 
 export function OurStory() {
   const sectionRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => {
-      const el = sectionRef.current;
-      if (!el) return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const scrollParent = getScrollParent(el);
+
+    const update = () => {
       const rect = el.getBoundingClientRect();
-      const total = el.offsetHeight - window.innerHeight;
+      const vh = window.innerHeight;
+      const total = el.offsetHeight - vh;
       const scrolled = Math.min(Math.max(-rect.top, 0), total);
       setProgress(total > 0 ? scrolled / total : 0);
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+
+    update();
+    const target: EventTarget = scrollParent;
+    target.addEventListener("scroll", update, { passive: true } as AddEventListenerOptions);
+    window.addEventListener("resize", update);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      target.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
     };
   }, []);
 
-  // Photo 2 enters during 0..0.5, Photo 3 during 0.5..1
+  // Photo i (i>=1) enters during [(i-1)/2, i/2] of progress.
   const getCardStyle = (index: number): React.CSSProperties => {
     const { restX, restY, rotate } = PHOTOS[index];
     if (index === 0) {
       return {
         transform: `translate3d(calc(-50% + ${restX}vw), calc(-50% + ${restY}vh), 0) rotate(${rotate}deg)`,
         zIndex: 1,
+        opacity: 1,
       };
     }
-    const segStart = (index - 1) * 0.5;
-    const local = Math.min(Math.max((progress - segStart) / 0.5, 0), 1);
+    const segStart = (index - 1) / (PHOTOS.length - 1);
+    const segEnd = index / (PHOTOS.length - 1);
+    const local = Math.min(Math.max((progress - segStart) / (segEnd - segStart), 0), 1);
     const eased = easeOutCubic(local);
-    const startY = 120; // vh below center
+    const startY = 110; // vh below center
     const y = startY + (restY - startY) * eased;
     const x = restX * eased;
     const r = rotate * eased;
     return {
       transform: `translate3d(calc(-50% + ${x}vw), calc(-50% + ${y}vh), 0) rotate(${r}deg)`,
       zIndex: index + 1,
-      opacity: local > 0 ? 1 : 0,
+      opacity: local > 0.02 ? 1 : 0,
     };
   };
 
@@ -90,7 +110,7 @@ export function OurStory() {
               className="absolute left-1/2 top-1/2 will-change-transform"
               style={{
                 ...getCardStyle(i),
-                transition: "transform 140ms ease-out, opacity 200ms ease-out",
+                transition: "transform 200ms ease-out, opacity 250ms ease-out",
               }}
             >
               <div
