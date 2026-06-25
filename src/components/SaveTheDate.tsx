@@ -72,8 +72,9 @@ export function SaveTheDate() {
 
       <div className="relative z-10 mt-12 flex items-start justify-center gap-4 sm:gap-8">
         <ScratchCard label="Day" value="06" onReveal={() => setRevealed((r) => ({ ...r, day: true }))} />
-        <ScratchCard label="Month" value="DEC" onReveal={() => setRevealed((r) => ({ ...r, month: true }))} />
+        <ScratchCard label="Month" value="12" onReveal={() => setRevealed((r) => ({ ...r, month: true }))} />
         <ScratchCard label="Year" value="2026" onReveal={() => setRevealed((r) => ({ ...r, year: true }))} />
+
       </div>
 
       {/* Final message */}
