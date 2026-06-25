@@ -31,6 +31,27 @@ export function SaveTheDate() {
     [showSparkles],
   );
 
+  const confettiColors = ["#d9a45a", "#e8c07a", "#f5d8b8", "#c98a72", "#b07a65", "#fff4d6"];
+  const confetti = useMemo(
+    () =>
+      Array.from({ length: 80 }).map((_, i) => {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 180 + Math.random() * 320;
+        return {
+          id: i,
+          dx: Math.cos(angle) * distance,
+          dy: Math.sin(angle) * distance - 60,
+          rotate: Math.random() * 720 - 360,
+          delay: Math.random() * 0.25,
+          duration: 1.6 + Math.random() * 1.2,
+          color: confettiColors[i % confettiColors.length],
+          w: 6 + Math.random() * 6,
+          h: 10 + Math.random() * 8,
+        };
+      }),
+    [showSparkles],
+  );
+
   return (
     <section
       className="relative min-h-[100svh] w-full overflow-hidden flex flex-col items-center justify-center px-6 py-20"
