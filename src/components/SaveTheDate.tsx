@@ -70,9 +70,9 @@ export function SaveTheDate() {
         </div>
       </header>
 
-      <div className="relative z-10 mt-12 flex items-start justify-center gap-4 sm:gap-8">
+      <div className="relative z-10 mt-12 flex items-start justify-center gap-3 sm:gap-5">
         <ScratchCard label="Day" value="06" onReveal={() => setRevealed((r) => ({ ...r, day: true }))} />
-        <ScratchCard label="Month" value="12" onReveal={() => setRevealed((r) => ({ ...r, month: true }))} />
+        <ScratchCard label="Month" value="DEC" onReveal={() => setRevealed((r) => ({ ...r, month: true }))} />
         <ScratchCard label="Year" value="2026" onReveal={() => setRevealed((r) => ({ ...r, year: true }))} />
 
       </div>
@@ -84,10 +84,10 @@ export function SaveTheDate() {
         }`}
       >
         <p className="font-serif italic text-lg sm:text-xl text-gold-deep">
-          We can't wait to celebrate with you{" "}
-          <span style={{ color: "#d97a82" }}>❤</span>
+          We can't wait to celebrate with you.
         </p>
       </div>
+
 
       {/* Sparkle burst */}
       {showSparkles && (
