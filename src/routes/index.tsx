@@ -4,6 +4,8 @@ import videoAsset from "@/assets/opening-envelope.mp4.asset.json";
 import posterAsset from "@/assets/opening-envelope-poster.jpg.asset.json";
 import introAsset from "@/assets/intro-page.mp4.asset.json";
 import { SaveTheDate } from "@/components/SaveTheDate";
+import { WeddingCountdown } from "@/components/WeddingCountdown";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -157,14 +159,16 @@ function OpeningScreen() {
         />
       </section>
 
-      {/* Save the Date section */}
+      {/* Save the Date + Countdown */}
       <div
         className={`absolute inset-0 transition-opacity duration-[1400ms] ease-out overflow-y-auto ${
           stage === "savedate" ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       >
         <SaveTheDate />
+        <WeddingCountdown />
       </div>
+
     </main>
   );
 }
