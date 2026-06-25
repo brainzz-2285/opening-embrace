@@ -7,6 +7,7 @@ import { SaveTheDate } from "@/components/SaveTheDate";
 import { WeddingCountdown } from "@/components/WeddingCountdown";
 import { OurStory } from "@/components/OurStory";
 import { Festivities } from "@/components/Festivities";
+import { Venue } from "@/components/Venue";
 
 
 export const Route = createFileRoute("/")({
