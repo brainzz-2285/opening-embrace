@@ -45,21 +45,33 @@ export function ScratchCard({ label, value, onReveal }: Props) {
       ctx.fillRect(0, 0, w, h);
 
       // Subtle shimmer streaks
-      ctx.globalAlpha = 0.18;
-      for (let i = 0; i < 6; i++) {
-        const x = (i / 6) * w + Math.random() * 20;
+      ctx.globalAlpha = 0.14;
+      for (let i = 0; i < 5; i++) {
+        const x = (i / 5) * w + Math.random() * 20;
         ctx.fillStyle = i % 2 === 0 ? "#fff" : "#7a4a3b";
         ctx.fillRect(x, 0, 2 * dpr, h);
       }
       ctx.globalAlpha = 1;
 
-      // SCRATCH text
-      ctx.fillStyle = "rgba(90, 50, 40, 0.7)";
-      ctx.font = `${14 * dpr}px "Inter", sans-serif`;
+      // SCRATCH text — readable, centered
+      const scratchText = "SCRATCH";
+      const fontSize = Math.min(18 * dpr, w * 0.18);
+      ctx.font = `${fontSize}px "Cormorant Garamond", "Georgia", serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.letterSpacing = `${6 * dpr}px` as unknown as string;
-      ctx.fillText("S C R A T C H", w / 2, h / 2);
+      ctx.fillStyle = "rgba(110, 60, 45, 0.82)";
+
+      const totalWidth = ctx.measureText(scratchText).width;
+      const spacing = fontSize * 0.55;
+      const drawnWidth = totalWidth + spacing * (scratchText.length - 1);
+      const startX = (w - drawnWidth) / 2;
+      for (let i = 0; i < scratchText.length; i++) {
+        const char = scratchText[i];
+        const charWidth = ctx.measureText(char).width;
+        const x = startX + i * (totalWidth / scratchText.length + spacing) + charWidth / 2;
+        ctx.fillText(char, x, h / 2);
+      }
+
     };
 
     resize();
@@ -154,12 +166,12 @@ export function ScratchCard({ label, value, onReveal }: Props) {
         ref={containerRef}
         className="group relative h-32 w-24 sm:h-36 sm:w-28 rounded-xl overflow-hidden transition-transform duration-500 hover:-translate-y-1"
         style={{
-          background:
-            "linear-gradient(160deg, #fdf6ef 0%, #f7e6d8 60%, #f0d0b8 100%)",
+          background: "#ffffff",
           boxShadow:
             "0 8px 28px -10px rgba(184,125,104,0.45), 0 2px 6px -2px rgba(120,70,55,0.18), inset 0 0 0 1px rgba(216,167,140,0.35)",
         }}
       >
+
         {/* Reveal value */}
         <div
           className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${
@@ -167,10 +179,12 @@ export function ScratchCard({ label, value, onReveal }: Props) {
           }`}
         >
           <span
-            className="text-gold-gradient font-serif"
+            className="font-serif"
             style={{
               fontSize: "2.25rem",
               letterSpacing: "0.05em",
+              color: "#7a4a3b",
+              textShadow: "0 1px 0 rgba(255,255,255,0.8), 0 0 18px rgba(220,170,120,0.35)",
               filter: revealed
                 ? "drop-shadow(0 2px 12px rgba(200,140,90,0.45))"
                 : "none",
@@ -179,6 +193,7 @@ export function ScratchCard({ label, value, onReveal }: Props) {
             {value}
           </span>
         </div>
+
 
         {/* Scratch canvas */}
         <canvas
