@@ -12,7 +12,7 @@ export function SaveTheDate() {
     if (!allRevealed) return;
     setShowSparkles(true);
     const t1 = setTimeout(() => setShowMessage(true), 600);
-    const t2 = setTimeout(() => setShowSparkles(false), 2200);
+    const t2 = setTimeout(() => setShowSparkles(false), 3000);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
