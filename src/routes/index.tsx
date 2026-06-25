@@ -6,6 +6,7 @@ import introAsset from "@/assets/intro-page.mp4.asset.json";
 import { SaveTheDate } from "@/components/SaveTheDate";
 import { WeddingCountdown } from "@/components/WeddingCountdown";
 import { OurStory } from "@/components/OurStory";
+import { Festivities } from "@/components/Festivities";
 
 
 export const Route = createFileRoute("/")({
@@ -177,6 +178,7 @@ function OpeningScreen() {
         </div>
         <WeddingCountdown />
         <OurStory />
+        <Festivities />
       </div>
     </main>
   );
