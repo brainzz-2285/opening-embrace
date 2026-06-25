@@ -166,12 +166,12 @@ export function ScratchCard({ label, value, onReveal }: Props) {
         ref={containerRef}
         className="group relative h-32 w-24 sm:h-36 sm:w-28 rounded-xl overflow-hidden transition-transform duration-500 hover:-translate-y-1"
         style={{
-          background:
-            "linear-gradient(160deg, #fdf6ef 0%, #f7e6d8 60%, #f0d0b8 100%)",
+          background: "#ffffff",
           boxShadow:
             "0 8px 28px -10px rgba(184,125,104,0.45), 0 2px 6px -2px rgba(120,70,55,0.18), inset 0 0 0 1px rgba(216,167,140,0.35)",
         }}
       >
+
         {/* Reveal value */}
         <div
           className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${
